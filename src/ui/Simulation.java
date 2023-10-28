@@ -3,6 +3,7 @@ package ui;
 import model.Device;
 
 import javax.swing.*;
+import java.awt.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
@@ -35,6 +36,9 @@ public class Simulation extends JFrame {
     private JLabel invoiceTotal;
     private JLabel tipoTarifa;
     private JPanel totalPanel;
+    private JLabel Energy;
+    private JLabel Calibre;
+    private JLabel Label;
     private JLabel powerLabel;
     private JButton button1;
 
@@ -42,6 +46,7 @@ public class Simulation extends JFrame {
     private int size;
     private ArrayList<JPanel> panels;
     private ArrayList<JLabel> imageLabels;
+    private int data;
 
     public Simulation(HashMap<Integer, Device> devicesMap,double cableLenght){
         setContentPane(SimulationFrame);
@@ -72,12 +77,12 @@ public class Simulation extends JFrame {
         double maxCurrent = getMaxCurrent(maxPower,devicesMap);
         System.out.println("Max current: "+maxCurrent);
         System.out.println("Min diameter: "+getDiameter(cableLenght,maxCurrent,maxPower));
-        getInvoice(devicesMap);
-
 
 
         //Calibre minimo
-        double[] data = getMinDiameter(getDiameter(cableLenght,maxCurrent,maxPower)); //intento de calculo de calibre
+        data = getMinDiameter(getDiameter(cableLenght,maxCurrent,maxPower)); //intento de calculo de calibre
+
+        getInvoice(devicesMap);
 
         for (int i = 0; i < devicesMap.size(); i++) {
             System.out.println(devicesMap.get(i).getDeviceName());
@@ -204,7 +209,8 @@ public class Simulation extends JFrame {
 
         BigDecimal bd = new BigDecimal(kW).setScale(2, RoundingMode.HALF_UP);
         double rn = bd.doubleValue();
-        powerLabel.setText(String.valueOf(rn)+ " kW");
+        Energy.setText(String.valueOf(rn)+ " kW");
+        Calibre.setText(String.valueOf(data));
         System.out.println("total power: "+kW+" kW");
 
         //estableciendo tarifa
@@ -238,7 +244,7 @@ public class Simulation extends JFrame {
      * @return
      */
 
-    public double[] getMinDiameter(double minDiameter){
+    public int getMinDiameter(double minDiameter){
         HashMap<Integer,Double> calibres = new HashMap<>();
         calibres.put(1, 0.007348);
         calibres.put(2, 0.006544);
@@ -282,18 +288,24 @@ public class Simulation extends JFrame {
         calibres.put(40, 0.000080);
 
         double[] data = new double[2];
-
-        for (Integer key:calibres.keySet()) {
+        int minCalibre = 0;
+        for (Integer key: calibres.keySet()) {
+            System.out.print("////////////////////////////////");
             System.out.println("Calibre: " + key + ", Diameter: " + calibres.get(key));
             if(calibres.get(key)>minDiameter){
+                minCalibre = key;
+                System.out.println("Diametro minimo (calculo): "+minDiameter);
+                System.out.println("Calibre minimo recomendado: "+ minCalibre);
+                break;
 
             }else{
+                minCalibre = key;
                 System.out.println("Diametro minimo (calculo): "+minDiameter);
-                System.out.println("Calibre minimo recomendado: "+calibres.get(key));
+                System.out.println("Calibre minimo recomendado: "+ key);
             }
         }
 
-        return data;
+        return minCalibre;
 
     }
 
