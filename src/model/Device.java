@@ -1,13 +1,17 @@
 package model;
 
 public class Device {
-    public Device(String deviceName, String imageName, double voltage, double current) {
+    public Device(String deviceName, String imageName, double voltage, double current,double power,double time) {
         this.deviceName = deviceName;
         this.imageName = imageName;
         this.voltage = voltage;
+        this.power = power;
+        this.time = time;
         this.current = current;
     }
 
+    private double power;
+    private double time; //hours
     private String deviceName;
     private String imageName;
 
@@ -44,5 +48,21 @@ public class Device {
 
     public void setCurrent(double current) {
         this.current = current;
+    }
+
+    public double getPower() {
+        return power;
+    }
+
+    public void setPower(double power) {
+        this.power = power;
+    }
+
+    public double getTime() {
+        return time;
+    }
+
+    public void setTime(double time) {
+        this.time = time;
     }
 }

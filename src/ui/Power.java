@@ -45,11 +45,35 @@ public class Power extends JFrame {
     private JTextField current9;
     private JTextField voltage10;
     private JTextField current10;
+    private JTextField potencia1;
+    private JTextField tiempo1;
+    private JTextField potencia2;
+    private JTextField potencia3;
+    private JTextField potencia4;
+    private JTextField potencia5;
+    private JTextField potencia6;
+    private JTextField potencia7;
+    private JTextField potencia8;
+    private JTextField potencia9;
+    private JTextField potencia10;
+    private JTextField tiempo2;
+    private JTextField tiempo3;
+    private JTextField tiempo4;
+    private JTextField tiempo5;
+    private JTextField tiempo6;
+    private JTextField tiempo7;
+    private JTextField tiempo8;
+    private JTextField tiempo9;
+    private JTextField tiempo10;
+    private JTextField lengthField;
     private ArrayList<JLabel> labelList;
     private ArrayList<String> devicesList;
     private int currentDevices;
     private ArrayList<JTextField> voltageFields;
     private ArrayList<JTextField> currentFields;
+    private ArrayList<JTextField> powerFields;
+    private ArrayList<JTextField> timeFields;
+
 
     private ArrayList<String> devicesSelected;
 
@@ -64,6 +88,10 @@ public class Power extends JFrame {
          */
         devicesList = new ArrayList<String>();
         labelList = new ArrayList<JLabel>();
+        powerFields = new ArrayList<JTextField>();
+        timeFields = new ArrayList<JTextField>();
+
+
         voltageFields = new ArrayList<JTextField>();
         currentFields = new ArrayList<JTextField>();
         devicesSelected = new ArrayList<String>();
@@ -73,19 +101,24 @@ public class Power extends JFrame {
         labelList = setLabels(labelList);
         voltageFields = setVoltageFields(voltageFields);
         currentFields = setCurrentFields(currentFields);
+        powerFields = setPowerFields(powerFields);
+        timeFields = setTimeFields(timeFields);
+
 
         setComboBox1Elemets(devicesComboBox,devicesList);
         setLabels(labelList);
         setInvisibleLabels(labelList);
         setInvisibleFields(voltageFields);
         setInvisibleFields(currentFields);
+        setInvisibleFields(powerFields);
+        setInvisibleFields(timeFields);
 
         adviceLabel.setVisible(false);
 
         currentDevices = 0;
 
         setContentPane(powerForm);
-        setSize(500,529);
+        setSize(750,529);
         setResizable(false);
 
         button1.addActionListener(new ActionListener() {
@@ -115,16 +148,32 @@ public class Power extends JFrame {
                         double current = Double.parseDouble(currentFields.get(i).getText());
                         System.out.println("Current: "+current);
 
-                        Device newDevice = new Device(deviceSelected,deviceSelected,voltage,current);
-                        DevicesMap.put(i,newDevice);
+                        double power = Double.parseDouble(powerFields.get(i).getText());
 
+                        double time = Double.parseDouble(timeFields.get(i).getText());
+
+                        if (power == voltage*current){
+                            //Power mathches with I*V = P
+                            System.out.println("Power: "+power);
+                            Device newDevice = new Device(deviceSelected,deviceSelected,voltage,current,power,time);
+                            DevicesMap.put(i,newDevice); //All set to add to map
+                            System.out.println("Device added");
+                            adviceLabel.setText("Dispositivo agregado");
+                            adviceLabel.setVisible(true);
+                        }else{
+                            System.out.println("Dismatch");
+                            adviceLabel.setVisible(true);
+                            adviceLabel.setText("Incongruencia en valores!");
+                        }
 
                     }catch (Exception e){
+                        adviceLabel.setVisible(true);
                         adviceLabel.setText("Error en parametros");
                         System.out.println("Error");
                     }
                 }
-                Simulation simulation = new Simulation(DevicesMap);
+                double cableLenght = Double.parseDouble(lengthField.getText());
+                Simulation simulation = new Simulation(DevicesMap,cableLenght);
                 simulation.setVisible(true);
             }
         });
@@ -150,10 +199,14 @@ public class Power extends JFrame {
         }else{
             Labels.get(currentDevices).setText(devicesComboBox.getSelectedItem().toString());
             Labels.get(currentDevices).setVisible(true);
+
+            //TextFields
             voltageFields.get(currentDevices).setVisible(true);
             currentFields.get(currentDevices).setVisible(true);
-            devicesSelected.add(devicesComboBox.getSelectedItem().toString());
+            powerFields.get(currentDevices).setVisible(true);
+            timeFields.get(currentDevices).setVisible(true);
 
+            devicesSelected.add(devicesComboBox.getSelectedItem().toString());
             currentDevices++;
         }
 
@@ -249,6 +302,33 @@ public class Power extends JFrame {
         return currentFields;
     }
 
+    public ArrayList<JTextField> setPowerFields(ArrayList<JTextField> powerFields){
+        powerFields.add(potencia1);
+        powerFields.add(potencia2);
+        powerFields.add(potencia3);
+        powerFields.add(potencia4);
+        powerFields.add(potencia5);
+        powerFields.add(potencia6);
+        powerFields.add(potencia7);
+        powerFields.add(potencia8);
+        powerFields.add(potencia9);
+        powerFields.add(potencia10);
+        return powerFields;
+    }
+
+    public ArrayList<JTextField> setTimeFields(ArrayList<JTextField> timeFields){
+        timeFields.add(tiempo1);
+        timeFields.add(tiempo2);
+        timeFields.add(tiempo3);
+        timeFields.add(tiempo4);
+        timeFields.add(tiempo5);
+        timeFields.add(tiempo6);
+        timeFields.add(tiempo7);
+        timeFields.add(tiempo8);
+        timeFields.add(tiempo9);
+        timeFields.add(tiempo10);
+        return timeFields;
+    }
 
 
 }
