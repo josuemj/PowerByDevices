@@ -50,9 +50,17 @@ public class Simulation extends JFrame {
 
     public Simulation(HashMap<Integer, Device> devicesMap,double cableLenght){
         setContentPane(SimulationFrame);
-        setSize(135*devicesMap.size(),280);
+
+        if(devicesMap.size()==1){
+            setSize(200*devicesMap.size(),280);
+            totalPanel.setSize(200*devicesMap.size(),200);
+        }else{
+            setSize(150*devicesMap.size(),280);
+            totalPanel.setSize(150*devicesMap.size(),200);
+        }
         setResizable(false);
-        totalPanel.setSize(135*devicesMap.size(),250);
+
+
 
         /**
          Lists settings
